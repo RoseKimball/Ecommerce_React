@@ -1,16 +1,35 @@
 import React, { useState } from 'react';
 import { Menu } from 'antd';
-import { HomeOutlined, KeyOutlined, UserOutlined, QuestionOutlined } from '@ant-design/icons';
+import { HomeOutlined, KeyOutlined, UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import firebase from 'firebase';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 const { SubMenu } = Menu; //Menu.submenu
 
 const Header = () => {
     const [current, setCurrent] = useState("home");
+    let dispatch = useDispatch();
+    let history = useHistory();
 
     const handleClick = (e) => {
          setCurrent(e.key)
     }
+
+    const logout = () => {
+        firebase.auth().signOut();
+        dispatch({
+            type: 'LOGOUT',
+            payload: null
+        }, [])
+        
+        /*history.push('/login') normally this is how we would redirect, but we can't recieve 
+        history through props here, because header is not an actual route in app.js. instead,
+        now we have to use useHistory hook, imported above.*/
+
+        history.push('/login');
+     }
 
     const { Item } = Menu;
 
@@ -25,9 +44,10 @@ const Header = () => {
             <Item key="Login" icon={<UserOutlined />} className="float-right">
                 <Link to='/login'>Login</Link>
             </Item>
-            <SubMenu key="SubMenu" icon={<QuestionOutlined />} title="Username">
+            <SubMenu key="SubMenu" icon={<UserOutlined />} title="Username">
                 <Item key="setting:1">Option 1</Item>
                 <Item key="setting:2">Option 2</Item>
+                <Item icon={<UserOutlined />} onClick={logout}>Logout</Item>
             </SubMenu>
         </Menu>
     );
