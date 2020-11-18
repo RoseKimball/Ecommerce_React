@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { Button } from 'antd';
 import { MailOutlined, GoogleOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const Login = ({ history }) => {
 
@@ -11,6 +12,7 @@ const Login = ({ history }) => {
     const [password, setPassword] = useState("");
     const [loading, setloading] = useState(false);
     let dispatch = useDispatch();
+    
 
     const loginForm = () => <form onSubmit={handleSubmit}>
         <div className='form-group'>
@@ -34,23 +36,25 @@ const Login = ({ history }) => {
         </div>
         <br/>
         <Button onClick={handleSubmit} 
-        type='primary'
-        className='mb-3'
-        shape='round'
-        block
-        icon={<MailOutlined />}
-        size='large'
-        disabled={!email || password.length < 6}
-        >Login with email/password</Button>
+            type='primary'
+            className='mb-3'
+            shape='round'
+            block
+            icon={<MailOutlined />}
+            size='large'
+            disabled={!email || password.length < 6}
+        >Login with email/password
+        </Button>
 
         <Button onClick={googleLogin} 
-        type='danger'
-        className='mb-3'
-        shape='round'
-        block
-        icon={<GoogleOutlined />}
-        size='large'
-        >Login with Google</Button>
+            type='danger'
+            className='mb-3'
+            shape='round'
+            block
+            icon={<GoogleOutlined />}
+            size='large'
+        >Login with Google
+        </Button>
     </form>
 
     const handleSubmit = async (e) => {
@@ -114,6 +118,7 @@ const Login = ({ history }) => {
               <div className="col-md-6 offset-md-3">
                 {loading ? (<h4 className='text-danger'>Loading...</h4>) : (<h4>Login</h4>)}
                 {loginForm()}
+                <Link to="/forgot/password" className="float-right text-danger">Forgot password?</Link>
               </div>  
            </div> 
         </div>
@@ -123,18 +128,7 @@ const Login = ({ history }) => {
 export default Login;
 
 
-{/* constructor(props) {
-  super(props);
 
-  this.state = {
-    // Sets that initial state
-  };
-
-  // Our event handlers
-  this.onClick = this.onClick.bind(this);
-  this.onKeyUp = this.onKeyUp.bind(this);
-  // et cetera...
-}*/}
 
 
 
