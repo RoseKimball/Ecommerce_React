@@ -10,6 +10,8 @@ const RegisterComplete = ({ history }) => {
 
     useEffect(() => {
         setEmail(window.localStorage.getItem('emailForRegistration'));
+        // console.log(window.location.href);
+        // console.log(window.localStorage.getItem('emailForRegistration'))
     }, [])
 
     const completeRegistrationForm = () => <form onSubmit={handleSubmit}>
@@ -17,6 +19,7 @@ const RegisterComplete = ({ history }) => {
             type="email" 
             className="form-control" 
             value={email} 
+            disabled
             autoFocus
         />
 
@@ -34,10 +37,36 @@ const RegisterComplete = ({ history }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        //valiation
+        //if no email or no password
+        if(!email || !password) {
+            toast.error('Email and password is required');
+            return;
+        }
+        //if password is too short
+        if(password.length < 6) {
+            toast.error('password must be at least 6 characters long.');
+            return;
+        }
+
        try {
             const result = await auth.signInWithEmailLink(email, window.location.href);
-       } catch {
-
+            // console.log('RESULT', result)
+            if(result.user.emailVerified) {
+                //remove user email from local storage
+                window.localStorage.removeItem('emailForRegistration');
+                // get user id token
+                let user = auth.currentUser;
+                await user.updatePassword(password);
+                const idTokenResult = await user.getIdTokenResult();
+                // redux store
+                console.log('USER', user, "idTokenResult", idTokenResult);
+                // redirect user to dashboard
+                // history.push('/')
+            }
+       } catch(error ) {
+            console.log(error);
+            toast.error(error.message);
        }
     }
 
