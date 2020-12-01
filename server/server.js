@@ -3,13 +3,13 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-require('dotenv').config()
+const fs = require('fs');
+require('dotenv').config();
 
 //app
 const app = express();
 
 //db
-// console.log(process.env.DATABASE);
 mongoose.connect(process.env.DATABASE, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -23,12 +23,13 @@ app.use(morgan('dev'))
 app.use(bodyParser.json({limit: '2mb'}));
 app.use(cors());
 
-//route
-app.get('/api', (req, res) => {
-    res.json({
-        data: 'json response'
-    })
-})
+//routes middleware
+// app.use('/api', authRoutes);
+fs.readdirSync('./routes').map((r) => 
+    console.log(r)
+    app.use('/api', require('./routes/' + r))
+)
+
 
 //port
 const port = process.env.PORT || 8000;
