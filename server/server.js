@@ -3,8 +3,11 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const fs = require('fs');
 require('dotenv').config();
+
+//import routes
+const authRoutes = require('./routes/auth')
+const userRoute = require('./routes/user')
 
 //app
 const app = express();
@@ -13,7 +16,8 @@ const app = express();
 mongoose.connect(process.env.DATABASE, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useFindAndModify: true
+    useFindAndModify: true,
+    useUnifiedTopology: true
 })
 .then(() => console.log('DB CONNECTED'))
 .catch((err) => console.log('MONGODB COULD NOT CONNECT', err));
@@ -24,11 +28,8 @@ app.use(bodyParser.json({limit: '2mb'}));
 app.use(cors());
 
 //routes middleware
-// app.use('/api', authRoutes);
-fs.readdirSync('./routes').map((r) => 
-    console.log(r)
-    app.use('/api', require('./routes/' + r))
-)
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoute);
 
 
 //port
