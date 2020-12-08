@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../../firebase';
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+
+const createOrUpdateUser = async (authtoken) => {
+    return await axios.post(`${process.env.REACT_APP_API}/auth/create-or-update-user`, {}, {
+        headers: {
+            authtoken: authtoken,
+        }
+    })
+}
 
 
 const RegisterComplete = ({ history }) => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    let dispatch = useDispatch();
+
+    const { user } = useSelector((state) => ({ ...state }));
 
     useEffect(() => {
         setEmail(window.localStorage.getItem('emailForRegistration'));
@@ -59,10 +72,22 @@ const RegisterComplete = ({ history }) => {
                 let user = auth.currentUser;
                 await user.updatePassword(password);
                 const idTokenResult = await user.getIdTokenResult();
+                createOrUpdateUser(idTokenResult.token).then((res) => {
+                    dispatch({
+                        type: 'LOGGED_IN_USER',
+                        payload: {
+                            name: res.data.name,
+                            email: res.data.email,
+                            token: idTokenResult.token,
+                            role: res.data.role,
+                            _id: res.data._id
+                        }
+                    })
+                }).catch()
                 // redux store
                 console.log('USER', user, "idTokenResult", idTokenResult);
                 // redirect user to dashboard
-                // history.push('/')
+                history.push('/')
             }
        } catch(error ) {
             console.log(error);
