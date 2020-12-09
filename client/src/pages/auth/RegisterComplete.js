@@ -2,16 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { auth } from '../../firebase';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-
-const createOrUpdateUser = async (authtoken) => {
-    return await axios.post(`${process.env.REACT_APP_API}/auth/create-or-update-user`, {}, {
-        headers: {
-            authtoken: authtoken,
-        }
-    })
-}
-
+import { createOrUpdateUser } from '../../functions/auth';
 
 const RegisterComplete = ({ history }) => {
 
@@ -83,7 +74,7 @@ const RegisterComplete = ({ history }) => {
                             _id: res.data._id
                         }
                     })
-                }).catch()
+                }).catch((err) => console.log(err))
                 // redux store
                 console.log('USER', user, "idTokenResult", idTokenResult);
                 // redirect user to dashboard

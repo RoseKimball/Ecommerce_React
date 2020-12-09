@@ -5,15 +5,7 @@ import { Button } from 'antd';
 import { MailOutlined, GoogleOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-
-const createOrUpdateUser = async (authtoken) => {
-    return await axios.post(`${process.env.REACT_APP_API}/auth/create-or-update-user`, {}, {
-        headers: {
-            authtoken: authtoken,
-        }
-    })
-}
+import { createOrUpdateUser } from '../../functions/auth';
 
 const Login = ({ history }) => {
 
@@ -28,7 +20,15 @@ const Login = ({ history }) => {
         if(user && user.token) {
             history.push('/');
         }
-    }, [user])
+    }, [user, history])
+
+    const roleBasedRedirect = (res) => {
+        if(res.data.role === 'admin') {
+            history.push('/admin/dashboard');
+        } else {
+            history.push('/user/history');
+        }
+    }
     
 
     const loginForm = () => <form onSubmit={handleSubmit}>
@@ -100,14 +100,11 @@ const Login = ({ history }) => {
                         _id: res.data._id
                     }
                 })
-            }).catch()
+                roleBasedRedirect(res);
+            }).catch((err) => console.log(err))  
+            setloading(false);
+            
 
-
-
-           
-            // setloading(false);
-            // history.push('/');
-            // console.log(result);
         } catch (error) {
             console.log(error);
             toast.error(error.message);
@@ -133,9 +130,10 @@ const Login = ({ history }) => {
                         _id: res.data._id
                     }
                 })
+                roleBasedRedirect(res);
             }).catch()
             setloading(false);
-            history.push('/');
+
         })
         .catch((error) => {
             console.log(error)
