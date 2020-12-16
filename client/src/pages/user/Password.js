@@ -7,8 +7,20 @@ const Password = () => {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+
+        await auth.currentUser.updatePassword(password)
+            .then(() => {
+                setLoading(false);
+                toast.success('password updated!');
+                setPassword("");
+            })
+            .catch((err) => {
+                setLoading(false);
+                toast.error(err.message)
+            })
     }
 
     const passwordUpdateForm = () => {
@@ -21,8 +33,10 @@ const Password = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className='form-control'
                     placeholder='Enter new password'
+                    disabled={loading}
+                    value={password}
                 />
-                <button className='btn btn-primary' disabled={!password || loading}></button>
+                <button className='btn btn-outline-primary' disabled={!password || loading || password.length < 6}>Submit</button>
             </div>
         </form>
         )
@@ -34,7 +48,7 @@ const Password = () => {
                     <UserNav />
                 </div>
                 <div className='col'>
-                    <h4>Password Update</h4>
+                    {loading ? <h4 className='danger'>loading...</h4> : <h4>password update</h4>}
                     {passwordUpdateForm()}
                 </div>
             </div>

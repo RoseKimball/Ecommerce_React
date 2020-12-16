@@ -8,6 +8,7 @@ require('dotenv').config();
 //import routes
 const authRoutes = require('./routes/auth')
 const userRoute = require('./routes/user')
+const categoryRoute = require('./routes/category');
 
 //app
 const app = express();
@@ -30,6 +31,7 @@ app.use(cors());
 //routes middleware
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoute);
+app.use('/api/category', categoryRoute);
 
 
 //port
