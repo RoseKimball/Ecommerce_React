@@ -9,6 +9,8 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth')
 const userRoute = require('./routes/user')
 const categoryRoute = require('./routes/category');
+const productRoute = require('./routes/product');
+const imageRoute = require('./routes/cloudinary');
 
 //app
 const app = express();
@@ -32,6 +34,8 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoute);
 app.use('/api/category', categoryRoute);
+app.use('/api/product', productRoute);
+app.use('/api/image', imageRoute);
 
 
 //port

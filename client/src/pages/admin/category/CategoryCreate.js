@@ -12,7 +12,7 @@ const CategoryUpdate = () => {
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState([]);
-    
+    const [keyword, setKeyword] = useState('');     
     useEffect(() => {
         loadCategories();
     }, [])
@@ -61,6 +61,14 @@ const CategoryUpdate = () => {
         }
     }
 
+    const handleSearchChange = (e) => {
+        e.preventDefault();
+
+        setKeyword(e.target.value.toLowerCase())
+    }
+
+    const searched = (keyword) => (c) => c.name.toLowerCase().includes(keyword)
+
     const CategoryForm = () => {
         return (
             <form onSubmit={handleSubmit}>
@@ -75,7 +83,14 @@ const CategoryUpdate = () => {
                     required
                 />
                 <br /> 
-                <button className='btn btn-outline-primary'>save</button>
+                <button className='btn btn-outline-primary mb-4'>save</button>
+                <input 
+                    type='search' 
+                    placeholder='Search' 
+                    value={keyword} 
+                    onChange={handleSearchChange}
+                    className='form-control mb-4'
+                 />
             </div>
         </form>
         )
@@ -92,7 +107,7 @@ const CategoryUpdate = () => {
                     { loading ? (<h4 className='text-danger'>Loading...</h4>) : (<h4>Create Category</h4>)}
                     {CategoryForm()}
                     <hr />
-                    {categories.map((c) => (
+                    {categories.filter(searched(keyword)).map((c) => (
                         <div className='alert alert-secondary' key={c._id}>
                             {c.name} 
                             <span  onClick={() => handleRemove(c.slug)}className='btn btn-sm float-right'>

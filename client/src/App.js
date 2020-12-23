@@ -15,10 +15,11 @@ import userHistory from './pages/user/userHistory';
 import UserRoute from './routes/UserRoute';
 import AdminRoute from './routes/AdminRoute';
 import Password from './pages/user/Password';
-import Wishlist from './pages/user/WishList';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import CategoryCreate from './pages/admin/category/CategoryCreate';
 import CategoryUpdate from './pages/admin/category/CategoryUpdate';
+import ProductCreate from './pages/product/ProductCreate';
+import ProductUpdate from './pages/product/ProductUpdate';
 
 import { currentUser } from './functions/auth';
 
@@ -62,10 +63,11 @@ const App = () => {
           <Route exact path='/forgot/password' component={ForgotPassword}/>
           <UserRoute exact path='/user/history' component={userHistory}/>
           <UserRoute exact path='/user/password' component={Password}/>
-          <UserRoute exact path='/user/wishlist' component={Wishlist}/>
           <AdminRoute exact path='/admin/dashboard' component={AdminDashboard}/>
           <AdminRoute exact path='/admin/category' component={CategoryCreate}/>
           <AdminRoute exact path='/admin/category/:slug' component={CategoryUpdate}/>
+          <AdminRoute exact path='/admin/product' component={ProductCreate}/>
+          <AdminRoute exact path='/admin/product/:slug' component={ProductUpdate}/>
       </Switch>
     </>
   )
