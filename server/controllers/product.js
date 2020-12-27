@@ -54,3 +54,23 @@ exports.update = async (req, res) => {
         return res.status(400).send('product update failed')
     }
 }
+
+exports.list = async (req, res) => {
+    try {
+        const {sort, order, limit} = req.body;
+        const products = await Product.find({})
+        .populate('Category')
+        .sort([[sort, order]])
+        .limit(limit)
+        .exec();
+
+        return res.json(products);
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+exports.productsCount = async (req, res) => {
+    let total = await Product.find({}).estimatedDocumentCount().exec();
+    res.json(total); 
+}

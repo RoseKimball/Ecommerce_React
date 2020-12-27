@@ -32,4 +32,12 @@ export const updateProduct = async (authtoken, slug, product) => {
     })
 }
 
+export const getProducts = async (sort, order, limit) => {
+    return await axios.post(`${process.env.REACT_APP_API}/product/products`, {
+        sort, 
+        order, 
+        limit
+    })
+}
+
 

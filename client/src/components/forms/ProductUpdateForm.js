@@ -86,22 +86,6 @@ const ProductUpdateForm = ({handleSubmit, handleChange, values}) => {
                 ))}
             </select>
         </div>
-        <div className='form-group'>
-            <h6>category</h6>
-            <select
-                name='category'
-                className='form-control'
-                onChange={handleChange}
-            >
-            <option>Please select the category:</option>
-                {categories.length > 0 &&
-                    categories.map(category => (
-                        <option key={category._id} value={category._id}>
-                            {category.name}
-                        </option>
-                    ))}
-            </select>
-        </div>
         <button className='btn btn-outline-primary mb-4'>save</button>
     </form>                 
     )

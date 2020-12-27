@@ -35,26 +35,31 @@ const ProductUpdate = ({match, history}) => {
     const {slug} = match.params;
 
     useEffect(() => {
+        console.log('state before res', values)
         loadProduct();
-        loadCategories();
-        console.log(values)
+        // loadCategories();
     }, [])
 
     const loadProduct = () => {
         getProduct(slug)
         .then(res => {
-            console.log(res.data)
+            console.log('res', res.data)
             setValues({...values, ...res.data})
         })
         .catch(err => {
-
+            console.log(err)
         })
 
-    }
+}
 
-    const loadCategories = () => {
-        getCategories().then(c => setValues({...values, categories: c.data}))
-    }
+    // const loadCategories = () => {
+    //     getCategories().then(res => {
+    //         setValues({...values, categories: res.data.name});
+    //         console.log('categories recieved', res.data.name)
+    //         console.log('values with new categories', values)
+    //     })
+        
+    // }
 
     const handleSubmit = (e) => {   
         e.preventDefault();
