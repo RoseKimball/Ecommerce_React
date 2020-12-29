@@ -21,6 +21,7 @@ import CategoryUpdate from './pages/admin/category/CategoryUpdate';
 import ProductCreate from './pages/product/ProductCreate';
 import ProductUpdate from './pages/product/ProductUpdate';
 import Product from './pages/Product';
+import CategoryHome from './pages/category/CategoryHome';
 
 import { currentUser } from './functions/auth';
 
@@ -70,6 +71,7 @@ const App = () => {
           <AdminRoute exact path='/admin/product' component={ProductCreate}/>
           <AdminRoute exact path='/admin/product/:slug' component={ProductUpdate}/>
           <Route exact path='/product/:slug' component={Product}/>
+          <Route exact path='/category/:slug' component={CategoryHome}/>
       </Switch>
     </>
   )
