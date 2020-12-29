@@ -22,6 +22,7 @@ import ProductCreate from './pages/product/ProductCreate';
 import ProductUpdate from './pages/product/ProductUpdate';
 import Product from './pages/Product';
 import CategoryHome from './pages/category/CategoryHome';
+import Shop from './pages/Shop';
 
 import { currentUser } from './functions/auth';
 
@@ -72,6 +73,7 @@ const App = () => {
           <AdminRoute exact path='/admin/product/:slug' component={ProductUpdate}/>
           <Route exact path='/product/:slug' component={Product}/>
           <Route exact path='/category/:slug' component={CategoryHome}/>
+          <Route exact path='/shop' component={Shop}/>
       </Switch>
     </>
   )
