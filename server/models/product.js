@@ -31,7 +31,7 @@ const productSchema = new mongoose.Schema({
         type: ObjectId,
         ref: "Category"
     },
-    quanitity: {
+    quantity: {
         type: Number,
         sold: {
             type: Number,

@@ -35,11 +35,13 @@ exports.remove = async (req, res) => {
 }
 
 exports.read = async (req, res) => {
+    // console.log('backend slug', req.params.slug)
     const product = await Product.findOne({slug: req.params.slug})
     .populate('Category')
     .exec();
 
-    return res.json(product); 
+    return res.json(product);
+    // console.log('backend response', res.json(product))
 }
 
 exports.update = async (req, res) => {
@@ -57,11 +59,15 @@ exports.update = async (req, res) => {
 
 exports.list = async (req, res) => {
     try {
-        const {sort, order, limit} = req.body;
+        const {sort, order, page} = req.body;
+        const currentPage = page || 1;
+        const perPage = 3;
+
         const products = await Product.find({})
+        .skip((currentPage - 1) * perPage)
         .populate('Category')
         .sort([[sort, order]])
-        .limit(limit)
+        .limit(perPage)
         .exec();
 
         return res.json(products);
@@ -73,4 +79,19 @@ exports.list = async (req, res) => {
 exports.productsCount = async (req, res) => {
     let total = await Product.find({}).estimatedDocumentCount().exec();
     res.json(total); 
+}
+
+exports.listRelated = async (req, res) => {
+    const product = await Product.findById(req.params.productId).exec();
+
+    const related = await Product.find({
+        _id: { $ne: product._id},
+        category: product.category
+    })
+    .limit(3)
+    .populate('Category')
+    .exec();
+    // .populate('postedBy')
+
+    res.json(related);
 }
