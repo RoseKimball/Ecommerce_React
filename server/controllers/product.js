@@ -16,12 +16,14 @@ exports.create =  async (req, res) => {
 }
 
 exports.listAll = async (req, res) => {
+    console.log('list all req', req.params.count)
     let products = await Product.find({})
         .limit(parseInt(req.params.count))
         .populate('Category')
         .sort([['createdAt', 'desc']])
         .exec()
     res.json(products);
+    console.log('products res', products)
 }
 
 exports.remove = async (req, res) => {
@@ -103,11 +105,35 @@ const handleQuery = async (req, res, query) => {
     res.json({products})
 }
 
+const handlePrice = async (req, res, price) => {
+    try {
+        let products = await Product.find({
+            price: {
+                $gte: price[0],
+                $lte: price[1]
+            }
+        })
+        .sort({price: 1})
+        .populate('Category', '_id name')
+        .exec();
+
+        res.json({products})
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 exports.searchFilters = async (req, res) => {
-    const {query} = req.body;
+    const {query, price} = req.body;
 
     if(query) {
-        console.log('query', query);
+        console.log(query);
         await handleQuery(req, res, query)
+    }
+
+    // price [10-200]
+    if(price !== undefined) {
+        console.log('price', price);
+        await handlePrice(req, res, price)
     }
 }
