@@ -1,16 +1,24 @@
+
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { getProductsByCount, fetchProductsByFilter } from '../functions/product';
+import { getCategories } from '../functions/category';
 import { useSelector, useDispatch } from 'react-redux';
 import ProductCard from '../components/cards/ProductCard';
-import {Menu, Slider} from 'antd';
-import { DollarOutlined } from '@ant-design/icons';
+import {Menu, Slider, Checkbox, Radio} from 'antd';
+import { DollarOutlined, DownSquareOutlined } from '@ant-design/icons';
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [price, setPrice] = useState([0, 0]);
     const [ok, setOk] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [categoryIds, setCategoryIds] = useState([]);
+    const [brands, setBrands] = useState(['Delaroq', 'The Line By K', 'Petite Studio', 'Retrouvai', 'Namesake']);
+    const [brand, setBrand] = useState('');
+    const [colors, setColors] = useState(['Black', 'Brown', 'Silver', 'White', 'Blue']);
+    const [color, setColor] = useState('');
 
     let dispatch = useDispatch();
     let {search} = useSelector((state) => ({...state}));
@@ -19,16 +27,25 @@ const Shop = () => {
     const {SubMenu, ItemGroup} = Menu;
 
     useEffect(() => {
-        setLoading(true);
         loadAllProducts();
+        getCategories().then(res => setCategories(res.data));
     }, [])
+
+    const fetchProducts = (arg) => {
+        fetchProductsByFilter(arg).then(res => { 
+            if(Array.isArray(res.data)) {
+                // setProducts(res.data.products)
+                setProducts(res.data)
+            }
+        });
+    }
+
     
     //load products by default
     const loadAllProducts = () => {
         getProductsByCount(12).then(res => {
             console.log('res products by count', res.data)
             setProducts(res.data)
-            setLoading(false);
         })
     }
     //load products by user search 
@@ -38,28 +55,19 @@ const Shop = () => {
         }
     }, [text])
 
-    const fetchProducts = (arg) => {
-        fetchProductsByFilter(arg).then(res => { 
-            if(Array.isArray(res.data.products)) {
-                setProducts(res.data.products)
-                setLoading(false);
-            }
-        });
-    }
 
     // load products by price range
-    // useEffect(() => {
-    //     console.log('ok to request');
-    //     fetchProducts({price})
-    // }, [ok])
-
+    useEffect(() => {
+        fetchProducts({ price });
+      }, [price]);
+    
     // on slider change...
     const handleSlider = (value) => {
         // change search text back to empty
-        dispatch({
-            type: 'SEARCH_QUERY',
-            payload: {text: ''}
-        })
+        // dispatch({
+        //     type: 'SEARCH_QUERY',
+        //     payload: {text: ''}
+        // })
         // set the state of price based on value input
         setPrice(value);
 
@@ -68,9 +76,70 @@ const Shop = () => {
         //     // setOk(!ok)
             
         // }, 300)
-        fetchProducts({price})
         // now that ok is true, useEffect will run and make an api call to filter products.
     }
+
+    // load products by category
+    const showCategories = () => categories.map((c) => (
+        <div key={c._id}>
+            <Checkbox 
+                value={c._id} 
+                className='pb-2 pl-4 pr-4' 
+                name='category'
+                onChange={handleCheck}
+                checked={categoryIds.includes(c._id)}
+            >
+                {c.name}
+            </Checkbox>
+            <br />
+        </div>
+    ))
+
+    const handleCheck = (e) => {
+        // take value of the cateogry that has been checked, and put it in the state
+        let inTheState = [...categoryIds];
+        let justChecked = e.target.value;
+        let foundInTheState = inTheState.indexOf(justChecked)
+        // indexOf: if not found, returns -1. if it is, returns index
+
+        if(foundInTheState === -1) {
+            inTheState.push(justChecked);
+        } else {
+            inTheState.splice(foundInTheState, 1);
+        }
+        setCategoryIds(inTheState);
+        console.log(inTheState);
+
+        fetchProducts({category: inTheState})
+        console.log('state products after api call', products);
+    }
+
+    // filter products by brand
+    const showBrands = () => brands.map((b) => (
+        <Radio value={b} name={b} checked={b === brand} onChange={handleBrand} className='pb-1 pl-1 pr-4'>
+            {b}
+        </Radio>
+    ))
+
+    const handleBrand = (e) => {
+        setBrand(e.target.value)
+        fetchProducts({brand: e.target.value})
+        console.log(brand);
+    }
+
+    //filter products by color
+    const showColors = () => colors.map((c) => (
+        <Radio value={c} name={c} checked={c === color} onChange={handleColor} className='pb-1 pl-1 pr-4'>
+            {c}
+        </Radio>
+    ))
+
+    const handleColor = (e) => {
+        setBrand(e.target.value)
+        fetchProducts({color: e.target.value})
+        console.log(brand);
+    }
+
 
     return (
         <div className='container-fluid'>
@@ -79,7 +148,7 @@ const Shop = () => {
                 <div className='col-md-3 pt-2'>
                     <h4>Search Filter</h4>
                     <hr />
-                    <Menu defaultOpenKeys={['1']} mode='inline'>
+                    <Menu defaultOpenKeys={['1', '2', '3', '4']} mode='inline'>
                         <SubMenu 
                             key='1' 
                             title={
@@ -96,6 +165,42 @@ const Shop = () => {
                                     onChange={handleSlider}
                                     max='4999' 
                                 />
+                            </div>
+                        </SubMenu>
+                        <SubMenu 
+                            key='2' 
+                            title={
+                                <span className='h6'>
+                                    <DownSquareOutlined />
+                                    Categories
+                                </span>
+                            }>
+                            <div>
+                                {showCategories()}
+                            </div>
+                        </SubMenu>
+                        <SubMenu 
+                            key='3' 
+                            title={
+                                <span className='h6'>
+                                    <DownSquareOutlined />
+                                    Brands
+                                </span>
+                            }>
+                            <div>
+                                {showBrands()}
+                            </div>
+                        </SubMenu>
+                        <SubMenu 
+                            key='4' 
+                            title={
+                                <span className='h6'>
+                                    <DownSquareOutlined />
+                                    Colors
+                                </span>
+                            }>
+                            <div>
+                                {showColors()}
                             </div>
                         </SubMenu>
                     </Menu>

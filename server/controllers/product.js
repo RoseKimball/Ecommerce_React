@@ -123,8 +123,32 @@ const handlePrice = async (req, res, price) => {
     }
 }
 
+const handleCategory =  async (req, res, category) => {
+    try {
+        console.log('categories recieved in handler', category)
+        // console.log('handleCategory reached')
+        let products = await Product.find({category}).populate('Category', '_id name').exec();
+        // console.log('database categories query', products)
+        res.json(products);
+        console.log('backend category res', products)
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+const handleColor = async (req, res, color) => {
+    const products = await Product.find({color}).populate('Category', '_id name').exec();
+    res.json(products);
+}
+
+const handleBrand = async (req, res, brand) => {
+    const products = await Product.find({brand}).populate('Category', '_id name').exec();
+    res.json(products);
+}
+
+
 exports.searchFilters = async (req, res) => {
-    const {query, price} = req.body;
+    const {query, price, category, color, brand} = req.body;
 
     if(query) {
         console.log(query);
@@ -136,4 +160,20 @@ exports.searchFilters = async (req, res) => {
         console.log('price', price);
         await handlePrice(req, res, price)
     }
+
+    if(category) {
+        console.log('category recieved on backend', category);
+        await handleCategory(req, res, category)
+    }
+    
+    if(color) {
+        console.log('color recieved on backend', color);
+        await handleColor(req, res, color);
+    }
+
+    if(brand) {
+        console.log('brand recieved on backend', brand);
+        await handleBrand(req, res, brand);
+    }
+
 }

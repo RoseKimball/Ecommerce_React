@@ -42,7 +42,8 @@ const ProductCreate = () => {
             .then(res => {
                 console.log(res)
                 window.alert(`${res.data.title} is created`);
-                window.location.reload();
+                // window.location.reload();
+                setValues({...values, title: '', description: '', price: 0, images: [], quantity: 0})
             })
             .catch(err => {
                 console.log(err)
