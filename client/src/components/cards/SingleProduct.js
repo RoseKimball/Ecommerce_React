@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
-import { Card, Tabs } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Card, Tabs, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import ProductListItems from './ProductListItems';
-import ModernArt from '../../images/modernArt.jpg'
+import ModernArt from '../../images/modernArt.jpg';
+import { useSelector, useDispatch } from 'react-redux';
+import _ from 'lodash';
 
 const { TabPane } = Tabs;
 
@@ -13,9 +15,42 @@ const { TabPane } = Tabs;
 const SingleProduct = (props) => {
     // const { title, description, images, slug } = product;
 
+    const [tooltip, setTooltip] = useState('Click to Add');
+
+    const {user, cart} = useSelector((state) => ({...state}));
+    const dispatch = useDispatch();
+
+
     useEffect(() => {
         console.log('passed to child component', props.product)
     })
+
+    const handleAddToCart = (e) => {
+        e.preventDefault();
+        console.log('single product handle add to cart')
+        let cart = [];
+        if(typeof window !== 'undefined') {
+            if(localStorage.getItem('cart')) {
+                cart = JSON.parse(localStorage.getItem('cart'))
+            }
+            cart.push({
+                ...props.product,
+                count: 1,
+            });
+            console.log('cart', cart)
+            // remove duplicates
+            let unique = _.uniqWith(cart, _.isEqual);
+            // save to local storage
+            console.log('unique', unique);
+            localStorage.setItem('cart', JSON.stringify(unique))
+            setTooltip('Added');
+            dispatch({
+                type: 'ADD_TO_CART',
+                payload: unique
+            })
+        }
+
+    }
 
     return (
         <>
@@ -42,9 +77,11 @@ const SingleProduct = (props) => {
             <h1 className='bg-info p-3'>{props.product.title}</h1>
                 <Card
                     actions={[
-                        <>
-                            <ShoppingCartOutlined  className='text-success'/> Add to Cart
-                        </>
+                        <Tooltip title={tooltip}>
+                            <a href='#' onClick={handleAddToCart}>
+                                <ShoppingCartOutlined className='text-danger'/> <br /> Add To Cart
+                            </a>
+                        </Tooltip>
                     ]}
                 >
                     <ProductListItems product={props.product}/>

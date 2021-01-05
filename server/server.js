@@ -32,7 +32,7 @@ app.use(cors());
 
 //routes middleware
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoute);
+app.use('/api/user', userRoute);
 app.use('/api/category', categoryRoute);
 app.use('/api/product', productRoute);
 app.use('/api/image', imageRoute);

@@ -129,7 +129,7 @@ const Shop = () => {
 
     //filter products by color
     const showColors = () => colors.map((c) => (
-        <Radio value={c} name={c} checked={c === color} onChange={handleColor} className='pb-1 pl-1 pr-4'>
+        <Radio key={c} value={c} name={c} checked={c === color} onChange={handleColor} className='pb-1 pl-1 pr-4'>
             {c}
         </Radio>
     ))

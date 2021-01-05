@@ -4,7 +4,7 @@ const User = require('../models/user');
 exports.authCheck = async (req, res, next) => {
     try {
         console.log('REACHED MIDDLEWARE AUTHCHECK')
-        console.log(req.headers.authtoken);
+        console.log('token recieved in authCheck', req.headers.authtoken);
         const firebaseUser = await admin.auth().verifyIdToken(req.headers.authtoken);
         console.log('firebaseUser authcheck', firebaseUser);
         req.user = firebaseUser;

@@ -7,7 +7,7 @@ const Search = () => {
 
     const dispatch = useDispatch();
     const {search} = useSelector((state) => ({...state}));
-    console.log(search);
+    // console.log(search);
     const {text} = search;
 
     const history = useHistory();
