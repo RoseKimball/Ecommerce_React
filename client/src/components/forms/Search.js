@@ -4,12 +4,10 @@ import {useSelector, useDispatch} from 'react-redux';
 import {SearchOutlined} from '@ant-design/icons';
 
 const Search = () => {
-
     const dispatch = useDispatch();
     const {search} = useSelector((state) => ({...state}));
-    // console.log(search);
-    const {text} = search;
 
+    const {text} = search;
     const history = useHistory();
 
     const handleChange = (e) => {
@@ -17,7 +15,6 @@ const Search = () => {
             type: 'SEARCH_QUERY',
             payload: {text: e.target.value}
         })
-        // console.log(text);
     }
 
     const handleSubmit = (e) => {

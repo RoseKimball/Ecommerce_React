@@ -4,13 +4,11 @@ import {toast} from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { getCategory, updateCategory } from '../../../functions/category';
 
- 
-
 const CategoryCreate = ({ history, match }) => {
-    const {user} = useSelector(state => ({...state}))
-
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const {user} = useSelector(state => ({...state}))
     
     useEffect(() => {
         loadCategory();
@@ -42,8 +40,6 @@ const CategoryCreate = ({ history, match }) => {
             })
         }
     }
-
-
 
     const CategoryForm = () => {
         return (

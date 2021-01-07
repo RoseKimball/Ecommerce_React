@@ -3,29 +3,20 @@ import { Link } from 'react-router-dom';
 import { getCategories } from '../../functions/category';
 
 const CategoryList = () => {
-
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
 
-useEffect(() => {
-    setLoading(true);
-    loadCategories();
-}, [])
+    useEffect(() => {
+        setLoading(true);
+        loadCategories();
+    }, [])
 
-const loadCategories = () => {
-    getCategories().then(c => {
-        setCategories(c.data)
-        setLoading(false);
-    })
-}
-        
-
-
-    // const showCategories = () => (
-    //     categories.map((c) => {
-    //         <div key={c._id} className='btn btn-outlined-primary btn-lg btn-block btn-raised m-3'>{c.name}</div>
-    //     })
-    // )
+    const loadCategories = () => {
+        getCategories().then(c => {
+            setCategories(c.data)
+            setLoading(false);
+        })
+    }
 
     return (
         <div className='container'>

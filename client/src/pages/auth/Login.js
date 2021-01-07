@@ -8,12 +8,11 @@ import { Link } from 'react-router-dom';
 import { createOrUpdateUser } from '../../functions/auth';
 
 const Login = ({ history, location }) => {
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setloading] = useState(false);
-    let dispatch = useDispatch();
 
+    let dispatch = useDispatch();
     const { user } = useSelector((state) => ({ ...state }))
 
     useEffect(() => {

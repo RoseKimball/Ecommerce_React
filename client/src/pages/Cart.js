@@ -5,7 +5,6 @@ import ProductCardInCheckout from '../components/cards/ProductCardInCheckout';
 import { userCart } from '../functions/user';
 
 const Cart = ({history}) => {
-
     const {cart, user} = useSelector((state) => ({...state}));
     const dispatch = useDispatch();
 
@@ -16,10 +15,8 @@ const Cart = ({history}) => {
     }
 
     const saveAllToDB = () => {
-        // console.log('cart', JSON.stringify(cart, null, 4))
         userCart(user.token, cart)
         .then(res => {
-            console.log('user cart res', res)
             if(res.data.ok) {
                 history.push('/checkout')
             }

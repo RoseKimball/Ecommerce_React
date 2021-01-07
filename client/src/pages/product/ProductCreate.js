@@ -9,7 +9,6 @@ import FileUpload from '../../components/forms/FileUpload';
 import { LoadingOutlined } from '@ant-design/icons';
 
 const ProductCreate = () => {
-    
     const [values, setValues] = useState({
         title: '',
         description: '',
@@ -23,7 +22,6 @@ const ProductCreate = () => {
         color: '',
         brand: ''
     });
-
     const [loading, setLoading] = useState(false);
 
     const {user} = useSelector(state => ({...state}));
@@ -40,22 +38,18 @@ const ProductCreate = () => {
         e.preventDefault();
         createProduct(user.token, values)
             .then(res => {
-                console.log(res)
                 window.alert(`${res.data.title} is created`);
                 // window.location.reload();
                 setValues({...values, title: '', description: '', price: 0, images: [], quantity: 0})
             })
             .catch(err => {
-                console.log(err)
                 toast.error(err.response.data.err)
             })
     }
 
     const handleChange = (e) => {
         setValues({...values, [e.target.name]: e.target.value})
-        // console.log(e.target.name, e.target.value)
     }
-
 
     return (
         <div className='container-fluid'>

@@ -5,17 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createOrUpdateUser } from '../../functions/auth';
 
 const RegisterComplete = ({ history }) => {
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    let dispatch = useDispatch();
 
+    let dispatch = useDispatch();
     const { user } = useSelector((state) => ({ ...state }));
 
     useEffect(() => {
         setEmail(window.localStorage.getItem('emailForRegistration'));
-        // console.log(window.location.href);
-        // console.log(window.localStorage.getItem('emailForRegistration'))
     }, [])
 
     const completeRegistrationForm = () => <form onSubmit={handleSubmit}>
@@ -55,7 +52,6 @@ const RegisterComplete = ({ history }) => {
 
        try {
             const result = await auth.signInWithEmailLink(email, window.location.href);
-            // console.log('RESULT', result)
             if(result.user.emailVerified) {
                 //remove user email from local storage
                 window.localStorage.removeItem('emailForRegistration');

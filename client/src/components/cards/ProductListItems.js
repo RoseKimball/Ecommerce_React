@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const ProductListItems = ({product}) => {
     const {price, color, brand, quantity} = product;
-    console.log(product);
+
     return (
         <ul className='list-group'>
             <li className='list-group-item'>

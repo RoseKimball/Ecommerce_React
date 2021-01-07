@@ -2,19 +2,18 @@ import React from 'react';
 import ModalImage from 'react-modal-image';
 import ModernArt from '../../images/modernArt.jpg';
 import { useDispatch } from 'react-redux';
-import {toast} from 'react-toastify';
 import {CloseOutlined} from '@ant-design/icons';
+import {toast} from 'react-toastify';
 
 
 const ProductCardInCheckout = ({product}) => {
-    const colors = ['Black', 'Brown', 'Silver', 'White', 'Blue'];
-
     const dispatch = useDispatch();
 
-    const handleColorChange = (e) => {
-        // console.log('color changed', e.target.value);
+    const colors = ['Black', 'Brown', 'Silver', 'White', 'Blue'];
 
+    const handleColorChange = (e) => {
         let cart = [];
+
         if(typeof window !== 'undefined') {
             if(localStorage.getItem('cart')) {
                 cart = JSON.parse(localStorage.getItem('cart'))
@@ -36,20 +35,17 @@ const ProductCardInCheckout = ({product}) => {
     }
 
     const handleQuanityChange = (e) => {
-        // console.log('count changed', e.target.value)
-
+        let cart = [];
         let count = e.target.value < 1 ? 1 : e.target.value;
 
         if(e.target.value > product.quantity) {
             toast.error(`max available quantity: ${product.quantity}`)
         }
 
-        let cart = [];
         if(typeof window !== 'undefined') {
             if(localStorage.getItem('cart')) {
                 cart = JSON.parse(localStorage.getItem('cart'))
             }
-
 
             cart.map((p, i) => {
                 if(product._id === p._id) {
@@ -67,9 +63,8 @@ const ProductCardInCheckout = ({product}) => {
     }
 
     const handleRemove = () => {
-        // console.log(product._id, 'to remove')
-
         let cart = [];
+        
         if(typeof window !== 'undefined') {
             if(localStorage.getItem('cart')) {
                 cart = JSON.parse(localStorage.getItem('cart'))

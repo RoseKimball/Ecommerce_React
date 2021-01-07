@@ -1,25 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Tabs, Tooltip } from 'antd';
-import { Link } from 'react-router-dom';
-import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Carousel } from 'react-responsive-carousel';
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import ProductListItems from './ProductListItems';
 import ModernArt from '../../images/modernArt.jpg';
+import { Carousel } from 'react-responsive-carousel';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { Card, Tabs, Tooltip } from 'antd';
+import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import _ from 'lodash';
 
 const { TabPane } = Tabs;
 
-
 const SingleProduct = (props) => {
-    // const { title, description, images, slug } = product;
-
     const [tooltip, setTooltip] = useState('Click to Add');
 
     const {user, cart} = useSelector((state) => ({...state}));
     const dispatch = useDispatch();
-
 
     useEffect(() => {
         console.log('passed to child component', props.product)
@@ -27,7 +23,7 @@ const SingleProduct = (props) => {
 
     const handleAddToCart = (e) => {
         e.preventDefault();
-        console.log('single product handle add to cart')
+
         let cart = [];
         if(typeof window !== 'undefined') {
             if(localStorage.getItem('cart')) {
@@ -37,11 +33,12 @@ const SingleProduct = (props) => {
                 ...props.product,
                 count: 1,
             });
-            console.log('cart', cart)
+
             // remove duplicates
             let unique = _.uniqWith(cart, _.isEqual);
+
             // save to local storage
-            console.log('unique', unique);
+
             localStorage.setItem('cart', JSON.stringify(unique))
             setTooltip('Added');
             dispatch({

@@ -7,7 +7,6 @@ import 'react-quill/dist/quill.snow.css';
 import {Link} from 'react-router-dom';
 
 const Checkout = () => {
-
     const [products, setProducts] = useState([]);
     const [total, setTotal] = useState(0);
     const [address, setAddress] = useState('');
@@ -37,7 +36,6 @@ const Checkout = () => {
     }
 
     const emptyCart = () => {
-        console.log('empty cart method has token--->', user.token)
         //remove from local storage
         if(typeof window !== 'undefined') {
             localStorage.removeItem('cart')
@@ -52,7 +50,6 @@ const Checkout = () => {
         //remove from backend
         emptyUserCart(user.token)
         .then(res => {
-            console.log('removed cart', res)
             setProducts([]);
             setTotal(0);
             toast.success('Cart is empty.')

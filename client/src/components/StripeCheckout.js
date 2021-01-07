@@ -4,14 +4,14 @@ import {useSelector, useDispatch} from 'react-redux';
 import {createPaymentIntent} from '../functions/stripe';
 
 const StripeCheckout = ({history}) => {
-    const dispatch = useDispatch();
-    const {user} = useSelector((state) => ({...state}))
-
     const [succeeded, setSucceeded] = useState(false);
     const [error, setError] = useState(null);
     const [processing, setProcessing] = useState('');
     const [disabled, setDisabled] = useState(true);
     const [clientSecret, setClientSecret] = useState('');
+
+    const dispatch = useDispatch();
+    const {user} = useSelector((state) => ({...state}))
 
     const stripe = useStripe();
     const elements = useElements();

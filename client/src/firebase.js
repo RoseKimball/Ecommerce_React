@@ -1,5 +1,5 @@
 import firebase from 'firebase/app';
-import "firebase/auth" 
+import "firebase/auth" ;
 
 // <!-- The core Firebase JS SDK is always required and must be listed first -->
 // <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>

@@ -1,7 +1,6 @@
 import React from 'react';
 
 const ProductCreateForm = ({handleSubmit, handleChange, values}) => {
-
     const {
         title, 
         description, 
@@ -17,91 +16,91 @@ const ProductCreateForm = ({handleSubmit, handleChange, values}) => {
     } = values
 
     return (
-    <form onSubmit={handleSubmit}>
-       <div className='form-group'>
-            <h6>Title</h6>
-            <input 
-                type='text' 
-                name='title' 
-                className='form-control' 
-                value={title}
-                onChange={handleChange}
-            ></input>
-        </div>
+        <form onSubmit={handleSubmit}>
         <div className='form-group'>
-            <h6>Description</h6>
-            <input 
-                type='text' 
-                name='description' 
-                className='form-control' 
-                value={description}
-                onChange={handleChange}
-            ></input>
-        </div>
-        <div className='form-group'>
-            <h6>Price</h6>
-            <input 
-                type='number' 
-                name='price' 
-                className='form-control' 
-                value={price}
-                onChange={handleChange}
-            ></input>
-        </div>
-        <div className='form-group'>
-            <h6>Quantity</h6>
-            <input 
-                type='number' 
-                name='quantity' 
-                className='form-control' 
-                value={quantity}
-                onChange={handleChange}
-            ></input>
-        </div>
-        <div className='form-group'>
-            <h6>Color</h6>
-            <select
-                name='color'
-                className='form-control'
-                onChange={handleChange}
-            >
-            <option>Please select the color:</option>
-                {colors.map((color) => (
-                    <option key={color} value={color}>{color}</option>
-                ))}
-            </select>
-        </div>
-        <div className='form-group'>
-            <h6>Brand</h6>
-            <select
-                name='brand'
-                className='form-control'
-                onChange={handleChange}
-            >
-            <option>Please select the brand:</option>
-                {brands.map((brand) => (
-                    <option key={brand} value={brand}>{brand}</option>
-                ))}
-            </select>
-        </div>
-        <div className='form-group'>
-            <h6>category</h6>
-            <select
-                name='category'
-                className='form-control'
-                onChange={handleChange}
-            >
-            <option>Please select the category:</option>
-                {categories.length > 0 &&
-                    categories.map(category => (
-                        <option key={category._id} value={category._id}>
-                            {category.name}
-                        </option>
+                <h6>Title</h6>
+                <input 
+                    type='text' 
+                    name='title' 
+                    className='form-control' 
+                    value={title}
+                    onChange={handleChange}
+                ></input>
+            </div>
+            <div className='form-group'>
+                <h6>Description</h6>
+                <input 
+                    type='text' 
+                    name='description' 
+                    className='form-control' 
+                    value={description}
+                    onChange={handleChange}
+                ></input>
+            </div>
+            <div className='form-group'>
+                <h6>Price</h6>
+                <input 
+                    type='number' 
+                    name='price' 
+                    className='form-control' 
+                    value={price}
+                    onChange={handleChange}
+                ></input>
+            </div>
+            <div className='form-group'>
+                <h6>Quantity</h6>
+                <input 
+                    type='number' 
+                    name='quantity' 
+                    className='form-control' 
+                    value={quantity}
+                    onChange={handleChange}
+                ></input>
+            </div>
+            <div className='form-group'>
+                <h6>Color</h6>
+                <select
+                    name='color'
+                    className='form-control'
+                    onChange={handleChange}
+                >
+                <option>Please select the color:</option>
+                    {colors.map((color) => (
+                        <option key={color} value={color}>{color}</option>
                     ))}
-            </select>
-        </div>
-        <button className='btn btn-outline-primary mb-4'>save</button>
-    </form>                 
+                </select>
+            </div>
+            <div className='form-group'>
+                <h6>Brand</h6>
+                <select
+                    name='brand'
+                    className='form-control'
+                    onChange={handleChange}
+                >
+                <option>Please select the brand:</option>
+                    {brands.map((brand) => (
+                        <option key={brand} value={brand}>{brand}</option>
+                    ))}
+                </select>
+            </div>
+            <div className='form-group'>
+                <h6>category</h6>
+                <select
+                    name='category'
+                    className='form-control'
+                    onChange={handleChange}
+                >
+                <option>Please select the category:</option>
+                    {categories.length > 0 &&
+                        categories.map(category => (
+                            <option key={category._id} value={category._id}>
+                                {category.name}
+                            </option>
+                        ))}
+                </select>
+            </div>
+            <button className='btn btn-outline-primary mb-4'>save</button>
+        </form>                 
     )
 }
 

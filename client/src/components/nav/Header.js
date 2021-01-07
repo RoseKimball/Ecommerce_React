@@ -11,9 +11,13 @@ const { SubMenu } = Menu; //Menu.submenu
 
 const Header = () => {
     const [current, setCurrent] = useState("home");
+
     let dispatch = useDispatch();
     let { user, cart } = useSelector((state) => ({ ...state }));
+
     let history = useHistory();
+    
+    const { Item } = Menu;
 
     const handleClick = (e) => {
          setCurrent(e.key)
@@ -25,15 +29,9 @@ const Header = () => {
             type: 'LOGOUT',
             payload: null
         }, [])
-        
-        /*history.push('/login') normally this is how we would redirect, but we can't recieve 
-        history through props here, because header is not an actual route in app.js. instead,
-        now we have to use useHistory hook, imported above.*/
 
         history.push('/login');
      }
-
-    const { Item } = Menu;
 
     return (
         <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">

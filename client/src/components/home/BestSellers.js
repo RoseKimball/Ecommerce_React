@@ -6,7 +6,6 @@ import { Pagination } from 'antd';
 
 
 const BestSellers = () => {
-
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);

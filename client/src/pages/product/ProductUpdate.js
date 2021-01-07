@@ -9,10 +9,7 @@ import ProductUpdateForm from '../../components/forms/ProductUpdateForm';
 import { LoadingOutlined } from '@ant-design/icons';
 import FileUpload from '../../components/forms/FileUpload';
 
-
-
 const ProductUpdate = ({match, history}) => {
-
     const [values, setValues] = useState({
         title: '',
         description: '',
@@ -26,9 +23,7 @@ const ProductUpdate = ({match, history}) => {
         color: '',
         brand: ''
     });
-
     const [loading, setLoading] = useState(false);
-
 
     const {user} = useSelector(state => ({...state}));
 
@@ -50,16 +45,7 @@ const ProductUpdate = ({match, history}) => {
             console.log(err)
         })
 
-}
-
-    // const loadCategories = () => {
-    //     getCategories().then(res => {
-    //         setValues({...values, categories: res.data.name});
-    //         console.log('categories recieved', res.data.name)
-    //         console.log('values with new categories', values)
-    //     })
-        
-    // }
+    }
 
     const handleSubmit = (e) => {   
         e.preventDefault();
@@ -80,7 +66,6 @@ const ProductUpdate = ({match, history}) => {
 
     const handleChange = (e) => {
         setValues({...values, [e.target.name]: e.target.value})
-        // console.log(e.target.name, e.target.value)
     }
 
     return (

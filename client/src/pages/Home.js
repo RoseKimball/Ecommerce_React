@@ -4,10 +4,7 @@ import NewArrivals from '../components/home/NewArrivals';
 import BestSellers from '../components/home/BestSellers';
 import CategoryList from '../components/category/CategoryList';
 
-
 const Home = () => {
-
-
     return (
         <>
             <div className='jumbotron text-danger h1 font-weight-bold text-center'>

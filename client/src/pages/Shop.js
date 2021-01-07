@@ -22,69 +22,19 @@ const Shop = () => {
 
     let dispatch = useDispatch();
     let {search} = useSelector((state) => ({...state}));
+
     const {text} = search;
 
     const {SubMenu, ItemGroup} = Menu;
 
-    // useEffect(() => {
-    //     loadAllProducts();
-    //     getCategories().then(res => setCategories(res.data));
-    // }, [])
-
+    //load products when first mounted
     useEffect(() => {
         loadAllProducts();
-        // fetch categories
         getCategories().then((res) => setCategories(res.data));
       }, []);
 
-    // const fetchProducts = (arg) => {
-    //     if(arg.price || arg.color || arg.brand || arg.query || arg.category) {
-    //         fetchProductsByFilter(arg).then(res => { 
-    //             if(Array.isArray(res.data.products)) {
-    //                 // setProducts(res.data.products)
-    //                 setProducts(res.data.products || [])
-    //                 console.log('products filter state', products)
-    //             }
-    //         });
-    //     }
-    // }
-
-    const fetchProducts = (arg) => {
-        fetchProductsByFilter(arg).then((res) => {
-          setProducts(res.data);
-        });
-      };
-
-    
-    //load products by default
-    // const loadAllProducts = () => {
-    //     getProductsByCount(12).then(res => {
-    //         // console.log('res products by count', res.data)
-    //         console.log('products res', res.data)
-    //         setProducts(res.data)
-    //         console.log('products state', products)
-    //     })
-    // }
-
-    const loadAllProducts = () => {
-        getProductsByCount(12).then((p) => {
-          setProducts(p.data);
-          setLoading(false);
-        });
-      };
-    
-    //load products by user search 
-    // useEffect(() => {
-    //     console.log('useEffect text', text)
-    //     if(text && text.length) {
-    //         fetchProducts({query: text, price, color, brand, category: categories});
-    //     } else {
-    //         loadAllProducts()
-    //     }
-
-    // }, [text])
-
-    useEffect(() => {
+      //handle user search query
+      useEffect(() => {
         const delayed = setTimeout(() => {
           fetchProducts({ query: text });
           if (!text) {
@@ -94,45 +44,27 @@ const Shop = () => {
         return () => clearTimeout(delayed);
       }, [text]);
 
-
-    // load products by price range
-    // useEffect(() => {
-    //     console.log('useEffect price', price)
-    //     if(price[0] !== 0 && price[1] !== 0) {
-    //         fetchProducts({ price, query: text, color, brand, category: categories });
-    //     }
-    //   }, [price]);
-
-    // ADDED IN
-    useEffect(() => {
-        console.log("ok to request");
+      //only filter products by price if state is ok
+      useEffect(() => {
         fetchProducts({ price });
       }, [ok]);
 
+      //helper function for filtering products
+    const fetchProducts = (arg) => {
+        fetchProductsByFilter(arg).then((res) => {
+          setProducts(res.data);
+        });
+      };
+
+    //helper function for loading products
+    const loadAllProducts = () => {
+        getProductsByCount(12).then((p) => {
+          setProducts(p.data);
+          setLoading(false);
+        });
+      };
     
-    // on slider change...
-    // const handleSlider = (value) => {
-    //     // change search text back to empty
-    //     // dispatch({
-    //     //     type: 'SEARCH_QUERY',
-    //     //     payload: {text: ''}
-    //     // })
-        
-    //     console.log('handleSlider', value)
-    //     // set the state of price based on value input
-    //     if(value && value.length) {
-    //         setPrice(value);
-    //     }
-        
-
-        // we don't want to make a request for every time the slider changes, so we delay it.
-        // setTimeout(() => {
-        //     // setOk(!ok)
-            
-        // }, 300)
-        // now that ok is true, useEffect will run and make an api call to filter products.
-    // }
-
+    //filter by price
     const handleSlider = (value) => {
         dispatch({
           type: "SEARCH_QUERY",
@@ -147,58 +79,7 @@ const Shop = () => {
         }, 300);
       };
 
-    // load products by category
-    // const showCategories = () => categories.map((c) => (
-    //     <div key={c._id}>
-    //         <Checkbox 
-    //             value={c._id} 
-    //             className='pb-2 pl-4 pr-4' 
-    //             name='category'
-    //             onChange={handleCheck}
-    //             checked={categoryIds.includes(c._id)}
-    //         >
-    //             {c.name}
-    //         </Checkbox>
-    //         <br />
-    //     </div>
-    // ))
-
-    const showCategories = () =>
-    categories.map((c) => (
-      <div key={c._id}>
-        <Checkbox
-          onChange={handleCheck}
-          className="pb-2 pl-4 pr-4"
-          value={c._id}
-          name="category"
-          checked={categoryIds.includes(c._id)}
-        >
-          {c.name}
-        </Checkbox>
-        <br />
-      </div>
-    ));
-
-    // const handleCheck = (e) => {
-    //     // take value of the cateogry that has been checked, and put it in the state
-    //     let inTheState = [...categoryIds];
-    //     let justChecked = e.target.value;
-    //     let foundInTheState = inTheState.indexOf(justChecked)
-    //     // indexOf: if not found, returns -1. if it is, returns index
-
-    //     if(foundInTheState === -1) {
-    //         inTheState.push(justChecked);
-    //     } else {
-    //         inTheState.splice(foundInTheState, 1);
-    //     }
-    //     setCategoryIds(inTheState);
-    //     console.log(inTheState);
-
-    
-    //     fetchProducts({category: inTheState, query: text, price, color, brand})
-    //     console.log('state products after api call', products);
-    // }
-
+    //filter by cateogry
     const handleCheck = (e) => {
         // reset
         dispatch({
@@ -230,20 +111,51 @@ const Shop = () => {
         } else {
             fetchProducts({ category: inTheState });
         }
-        // console.log('inthestate length', inTheState.length);
-        // console.log('cateogry id state length', categoryIds.length)
-        // console.log(inTheState);
-        // fetchProducts({ category: inTheState });
+
+    //filter by brand
+    const handleBrand = (e) => {
+        dispatch({
+          type: "SEARCH_QUERY",
+          payload: { text: "" },
+        });
+        setPrice([0, 0]);
+        setCategoryIds([]);
+        setColor("");
+        setBrand(e.target.value);
+        fetchProducts({ brand: e.target.value });
       };
 
-    // filter products by brand
-    // const showBrands = () => brands.map((b) => {
-    //     return (
-    //     <Radio value={b} name={b} checked={b === brand} onChange={handleBrand} className='pb-1 pl-1 pr-4'>
-    //         {b}
-    //     </Radio>
-    // )})
+    //filter by color
+    const handleColor = (e) => {
+        dispatch({
+          type: "SEARCH_QUERY",
+          payload: { text: "" },
+        });
+        setPrice([0, 0]);
+        setCategoryIds([]);
+        setBrand("");
+        setColor(e.target.value);
+        fetchProducts({ color: e.target.value });
+      };
 
+    //render categories
+    const showCategories = () =>
+    categories.map((c) => (
+      <div key={c._id}>
+        <Checkbox
+          onChange={handleCheck}
+          className="pb-2 pl-4 pr-4"
+          value={c._id}
+          name="category"
+          checked={categoryIds.includes(c._id)}
+        >
+          {c.name}
+        </Checkbox>
+        <br />
+      </div>
+    ));
+
+    //render brands
     const showBrands = () =>
         brands.map((b) => (
         <Radio
@@ -257,44 +169,7 @@ const Shop = () => {
         </Radio>
     ));
 
-
-    // const handleBrand = (e) => {
-    //     console.log('handleBrand', e.target.value)
-    //     setBrand(e.target.value)
-    //     if(e.target.value) {
-    //         fetchProducts({brand: e.target.value, color, query: text, price, color, category: categories})
-    //     }
-        
-    //     console.log(brand);
-    // }
-
-    const handleBrand = (e) => {
-        dispatch({
-          type: "SEARCH_QUERY",
-          payload: { text: "" },
-        });
-        setPrice([0, 0]);
-        setCategoryIds([]);
-        setColor("");
-        setBrand(e.target.value);
-        console.log('brand', brand)
-        // if(brand === '') {
-        //     loadAllProducts()
-        // } else {
-        //     fetchProducts({ brand: e.target.value });
-        // }
-        fetchProducts({ brand: e.target.value });
-      };
-
-    //filter products by color
-    // const showColors = () => colors.map((c) => {
-    //     // console.log('each color', c, 'chosen color', color)
-    //     return (
-    //     <Radio key={c} value={c} name={c} checked={c === color} onChange={handleColor} className='pb-1 pl-1 pr-4'>
-    //         {c}
-    //     </Radio>
-    // )})
-
+    //render colors
     const showColors = () =>
     colors.map((c) => (
       <Radio
@@ -308,36 +183,9 @@ const Shop = () => {
       </Radio>
     ));
 
-    // const handleColor = (e) => {
-    //     console.log('handleColor',color, color.length)
-    //     if(color && color.length) {
-    //         setColor(e.target.value)
-    //         fetchProducts({color: e.target.value, query: text, price, brand, category: categories})
-    //     }
-    //     console.log(brand);
-    // }
-
-    const handleColor = (e) => {
-        dispatch({
-          type: "SEARCH_QUERY",
-          payload: { text: "" },
-        });
-        setPrice([0, 0]);
-        setCategoryIds([]);
-        setBrand("");
-        setColor(e.target.value);
-        // if(color === '') {
-        //     loadAllProducts();
-        // } else {
-        //     fetchProducts({ color: e.target.value });
-        // }
-        fetchProducts({ color: e.target.value });
-      };
-
 
     return (
         <div className='container-fluid'>
-            {/* {JSON.stringify(products, null, 4)} */}
             <div className='row'>
                 <div className='col-md-3 pt-2'>
                     <h4>Search Filter</h4>
@@ -419,6 +267,7 @@ const Shop = () => {
         </div>
     )
 
+}
 }
 
 export default Shop;

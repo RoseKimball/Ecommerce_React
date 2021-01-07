@@ -3,13 +3,11 @@ import Resizer from 'react-image-file-resizer';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 import { Avatar, Badge } from 'antd';
-;
+
 const FileUpload = ({values, setValues, setLoading}) => {
     const {user} = useSelector((state) => ({...state}));
 
     const fileUploadAndResize = (e) => {
-        // console.log(e.target.files)
-
         //resize
         let files = e.target.files;
         let allUploadedFiles = values.images;
@@ -24,7 +22,6 @@ const FileUpload = ({values, setValues, setLoading}) => {
                         }
                     })
                     .then(res => {
-                        console.log('IMAGE UPLOAD RES', res);
                         setLoading(false);
                         allUploadedFiles.push(res.data);
                         setValues({...values, images: allUploadedFiles})
@@ -43,7 +40,7 @@ const FileUpload = ({values, setValues, setLoading}) => {
 
     const handleImageRemove = (public_id) => {
         setLoading(true);
-        // console.log('image removed', id);
+
         axios.post(`${process.env.REACT_APP_API}/image/removeImage`, {public_id}, {
             headers: {
                 authtoken: user ? user.token : ""

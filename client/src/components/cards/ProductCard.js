@@ -1,19 +1,18 @@
 import React, {useState} from 'react';
-import { Card, Tooltip } from 'antd';
-import { EyeOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import modernArt from '../../images/modernArt.jpg';
 import { Link } from 'react-router-dom';
-import _ from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
+import { Card, Tooltip } from 'antd';
+import { EyeOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import _ from 'lodash';
 
 const ProductCard = ({product}) => {
     const [tooltip, setTooltip] = useState('Click to Add');
 
-    const {title, description, images, slug, price } = product;
-
     const {user, cart} = useSelector((state) => ({...state}));
     const dispatch = useDispatch();
 
+    const {title, description, images, slug, price } = product;
     const { Meta } = Card;
 
     const handleAddToCart = (e) => {
@@ -30,7 +29,6 @@ const ProductCard = ({product}) => {
             // remove duplicates
             let unique = _.uniqWith(cart, _.isEqual);
             // save to local storage
-            console.log(unique);
             localStorage.setItem('cart', JSON.stringify(unique))
             setTooltip('Added');
             dispatch({
