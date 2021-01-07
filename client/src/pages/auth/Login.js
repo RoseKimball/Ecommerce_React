@@ -24,11 +24,9 @@ const Login = ({ history, location }) => {
 
     const roleBasedRedirect = (res) => {
         console.log(location);
-        if(location) {
-            history.push(location.state.from)
-            console.log('intended')
-        }
-        if(res.data.role === 'admin') {
+        if(location.state.from === 'cart') {
+            history.push('/cart')
+        } else if(res.data.role === 'admin') {
             history.push('/admin/dashboard');
         } else {
             history.push('/user/history');

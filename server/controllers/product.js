@@ -99,81 +99,171 @@ exports.listRelated = async (req, res) => {
 }
 
 // search helper functions
+// DIDN'T CHANGE THIS ONE!
 const handleQuery = async (req, res, query) => {
-    const products = await Product.find({$text: { $search: query}}).populate('Category', '_id name').exec();
-
-    res.json({products})
+    const products = await Product.find({
+        $or: [
+            {title: new RegExp(query, 'i')},
+            {description: new RegExp(query, 'i')},
+            {slug: new RegExp(query, 'i')}
+        ]
+    }).populate('Category', '_id name').exec();
+    res.json(products)
 }
+
+// const handlePrice = async (req, res, price) => {
+//     try {
+//         let products = await Product.find({
+//             price: {
+//                 $gte: price[0],
+//                 $lte: price[1]
+//             }
+//         })
+//         .sort({price: 1})
+//         .populate('Category', '_id name')
+//         .exec();
+
+//         res.json({products})
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
 
 const handlePrice = async (req, res, price) => {
     try {
-        let products = await Product.find({
-            price: {
-                $gte: price[0],
-                $lte: price[1]
-            }
-        })
-        .sort({price: 1})
-        .populate('Category', '_id name')
+      let products = await Product.find({
+        price: {
+          $gte: price[0],
+          $lte: price[1],
+        },
+      })
+        .populate("category", "_id name")
         .exec();
-
-        res.json({products})
+  
+      res.json(products);
     } catch (err) {
-        console.log(err);
+      console.log(err);
     }
-}
+  };
 
-const handleCategory =  async (req, res, category) => {
+// const handleCategory =  async (req, res, category) => {
+//     try {
+//         console.log('categories recieved in handler', category)
+//         // console.log('handleCategory reached')
+//         let products = await Product.find({category}).populate('Category', '_id name').exec();
+//         // console.log('database categories query', products)
+//         res.json(products);
+//         console.log('backend category res', products)
+//     } catch(err) {
+//         console.log(err);
+//     }
+// }
+
+const handleCategory = async (req, res, category) => {
     try {
-        console.log('categories recieved in handler', category)
-        // console.log('handleCategory reached')
-        let products = await Product.find({category}).populate('Category', '_id name').exec();
-        // console.log('database categories query', products)
-        res.json(products);
-        console.log('backend category res', products)
-    } catch(err) {
-        console.log(err);
+      let products = await Product.find({ category })
+        .populate("category", "_id name")
+        .exec();
+  
+      res.json(products);
+    } catch (err) {
+      console.log(err);
     }
-}
+  };
+  
+
+// const handleColor = async (req, res, color) => {
+//     const products = await Product.find({color}).populate('Category', '_id name').exec();
+//     res.json(products);
+// }
 
 const handleColor = async (req, res, color) => {
-    const products = await Product.find({color}).populate('Category', '_id name').exec();
+    const products = await Product.find({ color })
+      .populate("category", "_id name")
+      .exec();
+  
     res.json(products);
-}
+  };
+  
+
+// const handleBrand = async (req, res, brand) => {
+//     const products = await Product.find({brand}).populate('Category', '_id name').exec();
+//     res.json(products);
+// }
 
 const handleBrand = async (req, res, brand) => {
-    const products = await Product.find({brand}).populate('Category', '_id name').exec();
+    const products = await Product.find({ brand })
+      .populate("category", "_id name")
+      .exec();
+  
     res.json(products);
-}
+  };
 
+
+// exports.searchFilters = async (req, res) => {
+//     const {query, price, category, color, brand} = req.body;
+
+//     if(query) {
+//         console.log(query);
+//         await handleQuery(req, res, query)
+//     }
+
+//     // price [10-200]
+//     if(price !== undefined) {
+//         console.log('price', price);
+//         await handlePrice(req, res, price)
+//     }
+
+//     if(category) {
+//         console.log('category recieved on backend', category);
+//         await handleCategory(req, res, category)
+//     }
+    
+//     if(color) {
+//         console.log('color recieved on backend', color);
+//         await handleColor(req, res, color);
+//     }
+
+//     if(brand) {
+//         console.log('brand recieved on backend', brand);
+//         await handleBrand(req, res, brand);
+//     }
+
+// }
 
 exports.searchFilters = async (req, res) => {
-    const {query, price, category, color, brand} = req.body;
-
-    if(query) {
-        console.log(query);
-        await handleQuery(req, res, query)
+    const {
+      query,
+      price,
+      category,
+      color,
+      brand,
+    } = req.body;
+  
+    if (query) {
+      console.log("query --->", query);
+      await handleQuery(req, res, query);
     }
-
-    // price [10-200]
-    if(price !== undefined) {
-        console.log('price', price);
-        await handlePrice(req, res, price)
+  
+    // price [20, 200]
+    if (price !== undefined) {
+      console.log("price ---> ", price);
+      await handlePrice(req, res, price);
     }
-
-    if(category) {
-        console.log('category recieved on backend', category);
-        await handleCategory(req, res, category)
+  
+    if (category) {
+      console.log("category ---> ", category);
+      await handleCategory(req, res, category);
     }
+  
     
-    if(color) {
-        console.log('color recieved on backend', color);
-        await handleColor(req, res, color);
+    if (color) {
+      console.log("color ---> ", color);
+      await handleColor(req, res, color);
     }
-
-    if(brand) {
-        console.log('brand recieved on backend', brand);
-        await handleBrand(req, res, brand);
+  
+    if (brand) {
+      console.log("brand ---> ", brand);
+      await handleBrand(req, res, brand);
     }
-
-}
+  };

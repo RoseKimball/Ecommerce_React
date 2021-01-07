@@ -86,7 +86,7 @@ const Cart = ({history}) => {
                                 disabled={!cart.length} 
                                 className='btn btn-sm btn-primary mt-2'
                             >
-                                <Link to={{pathname: '/login', state: {from: cart}}}>Login to Checkout</Link>
+                                <Link to={{pathname: '/login', state: {from: 'cart'}}}>Login to Checkout</Link>
                             </button> 
                         )
                     }

@@ -26,50 +26,104 @@ const Shop = () => {
 
     const {SubMenu, ItemGroup} = Menu;
 
+    // useEffect(() => {
+    //     loadAllProducts();
+    //     getCategories().then(res => setCategories(res.data));
+    // }, [])
+
     useEffect(() => {
         loadAllProducts();
-        getCategories().then(res => setCategories(res.data));
-    }, [])
+        // fetch categories
+        getCategories().then((res) => setCategories(res.data));
+      }, []);
+
+    // const fetchProducts = (arg) => {
+    //     if(arg.price || arg.color || arg.brand || arg.query || arg.category) {
+    //         fetchProductsByFilter(arg).then(res => { 
+    //             if(Array.isArray(res.data.products)) {
+    //                 // setProducts(res.data.products)
+    //                 setProducts(res.data.products || [])
+    //                 console.log('products filter state', products)
+    //             }
+    //         });
+    //     }
+    // }
 
     const fetchProducts = (arg) => {
-        fetchProductsByFilter(arg).then(res => { 
-            if(Array.isArray(res.data)) {
-                // setProducts(res.data.products)
-                setProducts(res.data)
-            }
+        fetchProductsByFilter(arg).then((res) => {
+          setProducts(res.data);
         });
-    }
+      };
 
     
     //load products by default
+    // const loadAllProducts = () => {
+    //     getProductsByCount(12).then(res => {
+    //         // console.log('res products by count', res.data)
+    //         console.log('products res', res.data)
+    //         setProducts(res.data)
+    //         console.log('products state', products)
+    //     })
+    // }
+
     const loadAllProducts = () => {
-        getProductsByCount(12).then(res => {
-            console.log('res products by count', res.data)
-            setProducts(res.data)
-        })
-    }
+        getProductsByCount(12).then((p) => {
+          setProducts(p.data);
+          setLoading(false);
+        });
+      };
+    
     //load products by user search 
+    // useEffect(() => {
+    //     console.log('useEffect text', text)
+    //     if(text && text.length) {
+    //         fetchProducts({query: text, price, color, brand, category: categories});
+    //     } else {
+    //         loadAllProducts()
+    //     }
+
+    // }, [text])
+
     useEffect(() => {
-        if(text && text.length) {
-            fetchProducts({query: text});
-        }
-    }, [text])
+        const delayed = setTimeout(() => {
+          fetchProducts({ query: text });
+          if (!text) {
+            loadAllProducts();
+          }
+        }, 300);
+        return () => clearTimeout(delayed);
+      }, [text]);
 
 
     // load products by price range
+    // useEffect(() => {
+    //     console.log('useEffect price', price)
+    //     if(price[0] !== 0 && price[1] !== 0) {
+    //         fetchProducts({ price, query: text, color, brand, category: categories });
+    //     }
+    //   }, [price]);
+
+    // ADDED IN
     useEffect(() => {
+        console.log("ok to request");
         fetchProducts({ price });
-      }, [price]);
+      }, [ok]);
+
     
     // on slider change...
-    const handleSlider = (value) => {
-        // change search text back to empty
-        // dispatch({
-        //     type: 'SEARCH_QUERY',
-        //     payload: {text: ''}
-        // })
-        // set the state of price based on value input
-        setPrice(value);
+    // const handleSlider = (value) => {
+    //     // change search text back to empty
+    //     // dispatch({
+    //     //     type: 'SEARCH_QUERY',
+    //     //     payload: {text: ''}
+    //     // })
+        
+    //     console.log('handleSlider', value)
+    //     // set the state of price based on value input
+    //     if(value && value.length) {
+    //         setPrice(value);
+    //     }
+        
 
         // we don't want to make a request for every time the slider changes, so we delay it.
         // setTimeout(() => {
@@ -77,68 +131,208 @@ const Shop = () => {
             
         // }, 300)
         // now that ok is true, useEffect will run and make an api call to filter products.
-    }
+    // }
+
+    const handleSlider = (value) => {
+        dispatch({
+          type: "SEARCH_QUERY",
+          payload: { text: "" },
+        });
+    
+        // reset
+        setCategoryIds([]);
+        setPrice(value);
+        setTimeout(() => {
+          setOk(!ok);
+        }, 300);
+      };
 
     // load products by category
-    const showCategories = () => categories.map((c) => (
-        <div key={c._id}>
-            <Checkbox 
-                value={c._id} 
-                className='pb-2 pl-4 pr-4' 
-                name='category'
-                onChange={handleCheck}
-                checked={categoryIds.includes(c._id)}
-            >
-                {c.name}
-            </Checkbox>
-            <br />
-        </div>
-    ))
+    // const showCategories = () => categories.map((c) => (
+    //     <div key={c._id}>
+    //         <Checkbox 
+    //             value={c._id} 
+    //             className='pb-2 pl-4 pr-4' 
+    //             name='category'
+    //             onChange={handleCheck}
+    //             checked={categoryIds.includes(c._id)}
+    //         >
+    //             {c.name}
+    //         </Checkbox>
+    //         <br />
+    //     </div>
+    // ))
+
+    const showCategories = () =>
+    categories.map((c) => (
+      <div key={c._id}>
+        <Checkbox
+          onChange={handleCheck}
+          className="pb-2 pl-4 pr-4"
+          value={c._id}
+          name="category"
+          checked={categoryIds.includes(c._id)}
+        >
+          {c.name}
+        </Checkbox>
+        <br />
+      </div>
+    ));
+
+    // const handleCheck = (e) => {
+    //     // take value of the cateogry that has been checked, and put it in the state
+    //     let inTheState = [...categoryIds];
+    //     let justChecked = e.target.value;
+    //     let foundInTheState = inTheState.indexOf(justChecked)
+    //     // indexOf: if not found, returns -1. if it is, returns index
+
+    //     if(foundInTheState === -1) {
+    //         inTheState.push(justChecked);
+    //     } else {
+    //         inTheState.splice(foundInTheState, 1);
+    //     }
+    //     setCategoryIds(inTheState);
+    //     console.log(inTheState);
+
+    
+    //     fetchProducts({category: inTheState, query: text, price, color, brand})
+    //     console.log('state products after api call', products);
+    // }
 
     const handleCheck = (e) => {
-        // take value of the cateogry that has been checked, and put it in the state
+        // reset
+        dispatch({
+          type: "SEARCH_QUERY",
+          payload: { text: "" },
+        });
+        setPrice([0, 0]);
+        setBrand("");
+        setColor("");
+        // console.log(e.target.value);
         let inTheState = [...categoryIds];
         let justChecked = e.target.value;
-        let foundInTheState = inTheState.indexOf(justChecked)
-        // indexOf: if not found, returns -1. if it is, returns index
-
-        if(foundInTheState === -1) {
-            inTheState.push(justChecked);
+        let foundInTheState = inTheState.indexOf(justChecked); // index or -1
+    
+        // indexOf method ?? if not found returns -1 else return index [1,2,3,4,5]
+        if (foundInTheState === -1) {
+          inTheState.push(justChecked);
+        //   setCategoryIds(inTheState);
         } else {
-            inTheState.splice(foundInTheState, 1);
+          // if found pull out one item from index
+          inTheState.splice(foundInTheState, 1);
+        //   setCategoryIds(inTheState);
         }
+        
         setCategoryIds(inTheState);
-        console.log(inTheState);
 
-        fetchProducts({category: inTheState})
-        console.log('state products after api call', products);
-    }
+        if(!inTheState.length) {
+            loadAllProducts();
+        } else {
+            fetchProducts({ category: inTheState });
+        }
+        // console.log('inthestate length', inTheState.length);
+        // console.log('cateogry id state length', categoryIds.length)
+        // console.log(inTheState);
+        // fetchProducts({ category: inTheState });
+      };
 
     // filter products by brand
-    const showBrands = () => brands.map((b) => (
-        <Radio value={b} name={b} checked={b === brand} onChange={handleBrand} className='pb-1 pl-1 pr-4'>
+    // const showBrands = () => brands.map((b) => {
+    //     return (
+    //     <Radio value={b} name={b} checked={b === brand} onChange={handleBrand} className='pb-1 pl-1 pr-4'>
+    //         {b}
+    //     </Radio>
+    // )})
+
+    const showBrands = () =>
+        brands.map((b) => (
+        <Radio
+            value={b}
+            name={b}
+            checked={b === brand}
+            onChange={handleBrand}
+            className="pb-1 pl-4 pr-4"
+        >
             {b}
         </Radio>
-    ))
+    ));
+
+
+    // const handleBrand = (e) => {
+    //     console.log('handleBrand', e.target.value)
+    //     setBrand(e.target.value)
+    //     if(e.target.value) {
+    //         fetchProducts({brand: e.target.value, color, query: text, price, color, category: categories})
+    //     }
+        
+    //     console.log(brand);
+    // }
 
     const handleBrand = (e) => {
-        setBrand(e.target.value)
-        fetchProducts({brand: e.target.value})
-        console.log(brand);
-    }
+        dispatch({
+          type: "SEARCH_QUERY",
+          payload: { text: "" },
+        });
+        setPrice([0, 0]);
+        setCategoryIds([]);
+        setColor("");
+        setBrand(e.target.value);
+        console.log('brand', brand)
+        // if(brand === '') {
+        //     loadAllProducts()
+        // } else {
+        //     fetchProducts({ brand: e.target.value });
+        // }
+        fetchProducts({ brand: e.target.value });
+      };
 
     //filter products by color
-    const showColors = () => colors.map((c) => (
-        <Radio key={c} value={c} name={c} checked={c === color} onChange={handleColor} className='pb-1 pl-1 pr-4'>
-            {c}
-        </Radio>
-    ))
+    // const showColors = () => colors.map((c) => {
+    //     // console.log('each color', c, 'chosen color', color)
+    //     return (
+    //     <Radio key={c} value={c} name={c} checked={c === color} onChange={handleColor} className='pb-1 pl-1 pr-4'>
+    //         {c}
+    //     </Radio>
+    // )})
+
+    const showColors = () =>
+    colors.map((c) => (
+      <Radio
+        value={c}
+        name={c}
+        checked={c === color}
+        onChange={handleColor}
+        className="pb-1 pl-4 pr-4"
+      >
+        {c}
+      </Radio>
+    ));
+
+    // const handleColor = (e) => {
+    //     console.log('handleColor',color, color.length)
+    //     if(color && color.length) {
+    //         setColor(e.target.value)
+    //         fetchProducts({color: e.target.value, query: text, price, brand, category: categories})
+    //     }
+    //     console.log(brand);
+    // }
 
     const handleColor = (e) => {
-        setBrand(e.target.value)
-        fetchProducts({color: e.target.value})
-        console.log(brand);
-    }
+        dispatch({
+          type: "SEARCH_QUERY",
+          payload: { text: "" },
+        });
+        setPrice([0, 0]);
+        setCategoryIds([]);
+        setBrand("");
+        setColor(e.target.value);
+        // if(color === '') {
+        //     loadAllProducts();
+        // } else {
+        //     fetchProducts({ color: e.target.value });
+        // }
+        fetchProducts({ color: e.target.value });
+      };
 
 
     return (

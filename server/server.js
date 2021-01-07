@@ -11,6 +11,7 @@ const userRoute = require('./routes/user')
 const categoryRoute = require('./routes/category');
 const productRoute = require('./routes/product');
 const imageRoute = require('./routes/cloudinary');
+const stripeRoute = require('./routes/stripe');
 
 //app
 const app = express();
@@ -36,6 +37,7 @@ app.use('/api/user', userRoute);
 app.use('/api/category', categoryRoute);
 app.use('/api/product', productRoute);
 app.use('/api/image', imageRoute);
+app.use('/api/stripe', stripeRoute);
 
 
 //port

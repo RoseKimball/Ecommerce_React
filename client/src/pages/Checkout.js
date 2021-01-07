@@ -3,7 +3,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import { getUserCart, emptyUserCart, setUserAddress } from '../functions/user';
 import {toast} from 'react-toastify';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'
+import 'react-quill/dist/quill.snow.css';
+import {Link} from 'react-router-dom';
 
 const Checkout = () => {
 
@@ -87,7 +88,9 @@ const Checkout = () => {
 
                 <div className='row'>
                     <div className='col-md-6'>
-                        <button disabled={!addressSaved} className='btn btn-primary'>Place Order</button>
+                        <Link to='/payment'>
+                            <button disabled={!addressSaved} className='btn btn-primary'>Place Order</button>
+                        </Link>
                     </div>
 
                     <div className='col-md-6'>
